@@ -1,0 +1,966 @@
+Grammar
+
+    0 $accept: program $end
+
+    1 program: extern extern func
+
+    2 extern: EXTERN VOID PRINT '(' INT ')' ';'
+    3       | EXTERN INT READ '(' ')' ';'
+
+    4 func: INT NAME '(' INT NAME ')' block
+    5     | INT NAME '(' ')' ';' block
+
+    6 block: '{' decs stmnts '}'
+    7      | '{' stmnts '}'
+
+    8 decs: decs dec
+    9     | dec
+
+   10 dec: INT NAME ';'
+
+   11 stmnts: stmnts stmnt
+   12       | stmnt
+
+   13 stmnt: NAME '=' expr ';'
+   14      | if_s
+   15      | while_s
+   16      | print_s
+   17      | return_s
+
+   18 if_s: IF '(' equ ')' block ELSE block
+   19     | IF '(' equ ')' block
+
+   20 while_s: WHILE '(' equ ')' block
+
+   21 print_s: PRINT '(' expr ')' ';'
+
+   22 return_s: RETURN '(' expr ')' ';'
+
+   23 expr: '-' term
+   24     | term '+' term
+   25     | term '-' term
+   26     | term '*' term
+   27     | term '/' term
+   28     | term
+
+   29 equ: term '<' term
+   30    | term '>' term
+   31    | term LE term
+   32    | term GE term
+   33    | term NE term
+   34    | term EQ term
+   35    | term
+
+   36 term: VALUE
+   37     | NAME
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 2 3 4 5 18 19 20 21 22
+')' (41) 2 3 4 5 18 19 20 21 22
+'*' (42) 26
+'+' (43) 24
+'-' (45) 23 25
+'/' (47) 27
+';' (59) 2 3 5 10 13 21 22
+'<' (60) 29
+'=' (61) 13
+'>' (62) 30
+'{' (123) 6 7
+'}' (125) 6 7
+error (256)
+NAME (258) 4 5 10 13 37
+VALUE (259) 36
+EXTERN (260) 2 3
+VOID (261) 2
+INT (262) 2 3 4 5 10
+PRINT (263) 2 21
+READ (264) 3
+IF (265) 18 19
+ELSE (266) 18
+WHILE (267) 20
+RETURN (268) 22
+EQ (269) 34
+NE (270) 33
+GE (271) 32
+LE (272) 31
+UMINUS (273)
+IFX (274)
+
+
+Nonterminals, with rules where they appear
+
+$accept (32)
+    on left: 0
+program (33)
+    on left: 1, on right: 0
+extern (34)
+    on left: 2 3, on right: 1
+func (35)
+    on left: 4 5, on right: 1
+block (36)
+    on left: 6 7, on right: 4 5 18 19 20
+decs (37)
+    on left: 8 9, on right: 6 8
+dec (38)
+    on left: 10, on right: 8 9
+stmnts (39)
+    on left: 11 12, on right: 6 7 11
+stmnt (40)
+    on left: 13 14 15 16 17, on right: 11 12
+if_s (41)
+    on left: 18 19, on right: 14
+while_s (42)
+    on left: 20, on right: 15
+print_s (43)
+    on left: 21, on right: 16
+return_s (44)
+    on left: 22, on right: 17
+expr (45)
+    on left: 23 24 25 26 27 28, on right: 13 21 22
+equ (46)
+    on left: 29 30 31 32 33 34 35, on right: 18 19 20
+term (47)
+    on left: 36 37, on right: 23 24 25 26 27 28 29 30 31 32 33 34 35
+
+
+state 0
+
+    0 $accept: . program $end
+
+    EXTERN  shift, and go to state 1
+
+    program  go to state 2
+    extern   go to state 3
+
+
+state 1
+
+    2 extern: EXTERN . VOID PRINT '(' INT ')' ';'
+    3       | EXTERN . INT READ '(' ')' ';'
+
+    VOID  shift, and go to state 4
+    INT   shift, and go to state 5
+
+
+state 2
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 6
+
+
+state 3
+
+    1 program: extern . extern func
+
+    EXTERN  shift, and go to state 1
+
+    extern  go to state 7
+
+
+state 4
+
+    2 extern: EXTERN VOID . PRINT '(' INT ')' ';'
+
+    PRINT  shift, and go to state 8
+
+
+state 5
+
+    3 extern: EXTERN INT . READ '(' ')' ';'
+
+    READ  shift, and go to state 9
+
+
+state 6
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+state 7
+
+    1 program: extern extern . func
+
+    INT  shift, and go to state 10
+
+    func  go to state 11
+
+
+state 8
+
+    2 extern: EXTERN VOID PRINT . '(' INT ')' ';'
+
+    '('  shift, and go to state 12
+
+
+state 9
+
+    3 extern: EXTERN INT READ . '(' ')' ';'
+
+    '('  shift, and go to state 13
+
+
+state 10
+
+    4 func: INT . NAME '(' INT NAME ')' block
+    5     | INT . NAME '(' ')' ';' block
+
+    NAME  shift, and go to state 14
+
+
+state 11
+
+    1 program: extern extern func .
+
+    $default  reduce using rule 1 (program)
+
+
+state 12
+
+    2 extern: EXTERN VOID PRINT '(' . INT ')' ';'
+
+    INT  shift, and go to state 15
+
+
+state 13
+
+    3 extern: EXTERN INT READ '(' . ')' ';'
+
+    ')'  shift, and go to state 16
+
+
+state 14
+
+    4 func: INT NAME . '(' INT NAME ')' block
+    5     | INT NAME . '(' ')' ';' block
+
+    '('  shift, and go to state 17
+
+
+state 15
+
+    2 extern: EXTERN VOID PRINT '(' INT . ')' ';'
+
+    ')'  shift, and go to state 18
+
+
+state 16
+
+    3 extern: EXTERN INT READ '(' ')' . ';'
+
+    ';'  shift, and go to state 19
+
+
+state 17
+
+    4 func: INT NAME '(' . INT NAME ')' block
+    5     | INT NAME '(' . ')' ';' block
+
+    INT  shift, and go to state 20
+    ')'  shift, and go to state 21
+
+
+state 18
+
+    2 extern: EXTERN VOID PRINT '(' INT ')' . ';'
+
+    ';'  shift, and go to state 22
+
+
+state 19
+
+    3 extern: EXTERN INT READ '(' ')' ';' .
+
+    $default  reduce using rule 3 (extern)
+
+
+state 20
+
+    4 func: INT NAME '(' INT . NAME ')' block
+
+    NAME  shift, and go to state 23
+
+
+state 21
+
+    5 func: INT NAME '(' ')' . ';' block
+
+    ';'  shift, and go to state 24
+
+
+state 22
+
+    2 extern: EXTERN VOID PRINT '(' INT ')' ';' .
+
+    $default  reduce using rule 2 (extern)
+
+
+state 23
+
+    4 func: INT NAME '(' INT NAME . ')' block
+
+    ')'  shift, and go to state 25
+
+
+state 24
+
+    5 func: INT NAME '(' ')' ';' . block
+
+    '{'  shift, and go to state 26
+
+    block  go to state 27
+
+
+state 25
+
+    4 func: INT NAME '(' INT NAME ')' . block
+
+    '{'  shift, and go to state 26
+
+    block  go to state 28
+
+
+state 26
+
+    6 block: '{' . decs stmnts '}'
+    7      | '{' . stmnts '}'
+
+    NAME    shift, and go to state 29
+    INT     shift, and go to state 30
+    PRINT   shift, and go to state 31
+    IF      shift, and go to state 32
+    WHILE   shift, and go to state 33
+    RETURN  shift, and go to state 34
+
+    decs      go to state 35
+    dec       go to state 36
+    stmnts    go to state 37
+    stmnt     go to state 38
+    if_s      go to state 39
+    while_s   go to state 40
+    print_s   go to state 41
+    return_s  go to state 42
+
+
+state 27
+
+    5 func: INT NAME '(' ')' ';' block .
+
+    $default  reduce using rule 5 (func)
+
+
+state 28
+
+    4 func: INT NAME '(' INT NAME ')' block .
+
+    $default  reduce using rule 4 (func)
+
+
+state 29
+
+   13 stmnt: NAME . '=' expr ';'
+
+    '='  shift, and go to state 43
+
+
+state 30
+
+   10 dec: INT . NAME ';'
+
+    NAME  shift, and go to state 44
+
+
+state 31
+
+   21 print_s: PRINT . '(' expr ')' ';'
+
+    '('  shift, and go to state 45
+
+
+state 32
+
+   18 if_s: IF . '(' equ ')' block ELSE block
+   19     | IF . '(' equ ')' block
+
+    '('  shift, and go to state 46
+
+
+state 33
+
+   20 while_s: WHILE . '(' equ ')' block
+
+    '('  shift, and go to state 47
+
+
+state 34
+
+   22 return_s: RETURN . '(' expr ')' ';'
+
+    '('  shift, and go to state 48
+
+
+state 35
+
+    6 block: '{' decs . stmnts '}'
+    8 decs: decs . dec
+
+    NAME    shift, and go to state 29
+    INT     shift, and go to state 30
+    PRINT   shift, and go to state 31
+    IF      shift, and go to state 32
+    WHILE   shift, and go to state 33
+    RETURN  shift, and go to state 34
+
+    dec       go to state 49
+    stmnts    go to state 50
+    stmnt     go to state 38
+    if_s      go to state 39
+    while_s   go to state 40
+    print_s   go to state 41
+    return_s  go to state 42
+
+
+state 36
+
+    9 decs: dec .
+
+    $default  reduce using rule 9 (decs)
+
+
+state 37
+
+    7 block: '{' stmnts . '}'
+   11 stmnts: stmnts . stmnt
+
+    NAME    shift, and go to state 29
+    PRINT   shift, and go to state 31
+    IF      shift, and go to state 32
+    WHILE   shift, and go to state 33
+    RETURN  shift, and go to state 34
+    '}'     shift, and go to state 51
+
+    stmnt     go to state 52
+    if_s      go to state 39
+    while_s   go to state 40
+    print_s   go to state 41
+    return_s  go to state 42
+
+
+state 38
+
+   12 stmnts: stmnt .
+
+    $default  reduce using rule 12 (stmnts)
+
+
+state 39
+
+   14 stmnt: if_s .
+
+    $default  reduce using rule 14 (stmnt)
+
+
+state 40
+
+   15 stmnt: while_s .
+
+    $default  reduce using rule 15 (stmnt)
+
+
+state 41
+
+   16 stmnt: print_s .
+
+    $default  reduce using rule 16 (stmnt)
+
+
+state 42
+
+   17 stmnt: return_s .
+
+    $default  reduce using rule 17 (stmnt)
+
+
+state 43
+
+   13 stmnt: NAME '=' . expr ';'
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+    '-'    shift, and go to state 55
+
+    expr  go to state 56
+    term  go to state 57
+
+
+state 44
+
+   10 dec: INT NAME . ';'
+
+    ';'  shift, and go to state 58
+
+
+state 45
+
+   21 print_s: PRINT '(' . expr ')' ';'
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+    '-'    shift, and go to state 55
+
+    expr  go to state 59
+    term  go to state 57
+
+
+state 46
+
+   18 if_s: IF '(' . equ ')' block ELSE block
+   19     | IF '(' . equ ')' block
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+
+    equ   go to state 60
+    term  go to state 61
+
+
+state 47
+
+   20 while_s: WHILE '(' . equ ')' block
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+
+    equ   go to state 62
+    term  go to state 61
+
+
+state 48
+
+   22 return_s: RETURN '(' . expr ')' ';'
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+    '-'    shift, and go to state 55
+
+    expr  go to state 63
+    term  go to state 57
+
+
+state 49
+
+    8 decs: decs dec .
+
+    $default  reduce using rule 8 (decs)
+
+
+state 50
+
+    6 block: '{' decs stmnts . '}'
+   11 stmnts: stmnts . stmnt
+
+    NAME    shift, and go to state 29
+    PRINT   shift, and go to state 31
+    IF      shift, and go to state 32
+    WHILE   shift, and go to state 33
+    RETURN  shift, and go to state 34
+    '}'     shift, and go to state 64
+
+    stmnt     go to state 52
+    if_s      go to state 39
+    while_s   go to state 40
+    print_s   go to state 41
+    return_s  go to state 42
+
+
+state 51
+
+    7 block: '{' stmnts '}' .
+
+    $default  reduce using rule 7 (block)
+
+
+state 52
+
+   11 stmnts: stmnts stmnt .
+
+    $default  reduce using rule 11 (stmnts)
+
+
+state 53
+
+   37 term: NAME .
+
+    $default  reduce using rule 37 (term)
+
+
+state 54
+
+   36 term: VALUE .
+
+    $default  reduce using rule 36 (term)
+
+
+state 55
+
+   23 expr: '-' . term
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+
+    term  go to state 65
+
+
+state 56
+
+   13 stmnt: NAME '=' expr . ';'
+
+    ';'  shift, and go to state 66
+
+
+state 57
+
+   24 expr: term . '+' term
+   25     | term . '-' term
+   26     | term . '*' term
+   27     | term . '/' term
+   28     | term .
+
+    '*'  shift, and go to state 67
+    '/'  shift, and go to state 68
+    '+'  shift, and go to state 69
+    '-'  shift, and go to state 70
+
+    $default  reduce using rule 28 (expr)
+
+
+state 58
+
+   10 dec: INT NAME ';' .
+
+    $default  reduce using rule 10 (dec)
+
+
+state 59
+
+   21 print_s: PRINT '(' expr . ')' ';'
+
+    ')'  shift, and go to state 71
+
+
+state 60
+
+   18 if_s: IF '(' equ . ')' block ELSE block
+   19     | IF '(' equ . ')' block
+
+    ')'  shift, and go to state 72
+
+
+state 61
+
+   29 equ: term . '<' term
+   30    | term . '>' term
+   31    | term . LE term
+   32    | term . GE term
+   33    | term . NE term
+   34    | term . EQ term
+   35    | term .
+
+    '>'  shift, and go to state 73
+    '<'  shift, and go to state 74
+    EQ   shift, and go to state 75
+    NE   shift, and go to state 76
+    GE   shift, and go to state 77
+    LE   shift, and go to state 78
+
+    $default  reduce using rule 35 (equ)
+
+
+state 62
+
+   20 while_s: WHILE '(' equ . ')' block
+
+    ')'  shift, and go to state 79
+
+
+state 63
+
+   22 return_s: RETURN '(' expr . ')' ';'
+
+    ')'  shift, and go to state 80
+
+
+state 64
+
+    6 block: '{' decs stmnts '}' .
+
+    $default  reduce using rule 6 (block)
+
+
+state 65
+
+   23 expr: '-' term .
+
+    $default  reduce using rule 23 (expr)
+
+
+state 66
+
+   13 stmnt: NAME '=' expr ';' .
+
+    $default  reduce using rule 13 (stmnt)
+
+
+state 67
+
+   26 expr: term '*' . term
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+
+    term  go to state 81
+
+
+state 68
+
+   27 expr: term '/' . term
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+
+    term  go to state 82
+
+
+state 69
+
+   24 expr: term '+' . term
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+
+    term  go to state 83
+
+
+state 70
+
+   25 expr: term '-' . term
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+
+    term  go to state 84
+
+
+state 71
+
+   21 print_s: PRINT '(' expr ')' . ';'
+
+    ';'  shift, and go to state 85
+
+
+state 72
+
+   18 if_s: IF '(' equ ')' . block ELSE block
+   19     | IF '(' equ ')' . block
+
+    '{'  shift, and go to state 26
+
+    block  go to state 86
+
+
+state 73
+
+   30 equ: term '>' . term
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+
+    term  go to state 87
+
+
+state 74
+
+   29 equ: term '<' . term
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+
+    term  go to state 88
+
+
+state 75
+
+   34 equ: term EQ . term
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+
+    term  go to state 89
+
+
+state 76
+
+   33 equ: term NE . term
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+
+    term  go to state 90
+
+
+state 77
+
+   32 equ: term GE . term
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+
+    term  go to state 91
+
+
+state 78
+
+   31 equ: term LE . term
+
+    NAME   shift, and go to state 53
+    VALUE  shift, and go to state 54
+
+    term  go to state 92
+
+
+state 79
+
+   20 while_s: WHILE '(' equ ')' . block
+
+    '{'  shift, and go to state 26
+
+    block  go to state 93
+
+
+state 80
+
+   22 return_s: RETURN '(' expr ')' . ';'
+
+    ';'  shift, and go to state 94
+
+
+state 81
+
+   26 expr: term '*' term .
+
+    $default  reduce using rule 26 (expr)
+
+
+state 82
+
+   27 expr: term '/' term .
+
+    $default  reduce using rule 27 (expr)
+
+
+state 83
+
+   24 expr: term '+' term .
+
+    $default  reduce using rule 24 (expr)
+
+
+state 84
+
+   25 expr: term '-' term .
+
+    $default  reduce using rule 25 (expr)
+
+
+state 85
+
+   21 print_s: PRINT '(' expr ')' ';' .
+
+    $default  reduce using rule 21 (print_s)
+
+
+state 86
+
+   18 if_s: IF '(' equ ')' block . ELSE block
+   19     | IF '(' equ ')' block .
+
+    ELSE  shift, and go to state 95
+
+    $default  reduce using rule 19 (if_s)
+
+
+state 87
+
+   30 equ: term '>' term .
+
+    $default  reduce using rule 30 (equ)
+
+
+state 88
+
+   29 equ: term '<' term .
+
+    $default  reduce using rule 29 (equ)
+
+
+state 89
+
+   34 equ: term EQ term .
+
+    $default  reduce using rule 34 (equ)
+
+
+state 90
+
+   33 equ: term NE term .
+
+    $default  reduce using rule 33 (equ)
+
+
+state 91
+
+   32 equ: term GE term .
+
+    $default  reduce using rule 32 (equ)
+
+
+state 92
+
+   31 equ: term LE term .
+
+    $default  reduce using rule 31 (equ)
+
+
+state 93
+
+   20 while_s: WHILE '(' equ ')' block .
+
+    $default  reduce using rule 20 (while_s)
+
+
+state 94
+
+   22 return_s: RETURN '(' expr ')' ';' .
+
+    $default  reduce using rule 22 (return_s)
+
+
+state 95
+
+   18 if_s: IF '(' equ ')' block ELSE . block
+
+    '{'  shift, and go to state 26
+
+    block  go to state 96
+
+
+state 96
+
+   18 if_s: IF '(' equ ')' block ELSE block .
+
+    $default  reduce using rule 18 (if_s)
